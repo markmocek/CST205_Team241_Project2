@@ -1,6 +1,6 @@
-Hiding Text in Sound File
+ gHiding Text in Sound File
 
-Sean Vucinich - Abel - Mark Mocek
+Sean Vucinich - Abel Gonzalez - Mark Mocek
 
 CST205 Team 241      3/16/17
 
