@@ -2,12 +2,14 @@ import Tkinter
 from Tkinter import *
 import tkMessageBox
 import tkFileDialog
-from tkFileDialog import askopenfilenamefrom 
+from tkFileDialog import askopenfilename
+from tkFileDialog import asksaveasfile
 import Tkconstants
 from WavSteg import hide_data
 from WavSteg import recover_data
 from WavSteg import usage
 import os
+
 
 def openfile():
     filename = askopenfilename()
@@ -19,7 +21,7 @@ def openfile():
 
 def crypt(msg,shift):
         #Set string to lower case
-        message = message.lower()
+        message = msg.lower()
         #Set string to hold characters
         code = ""
         
@@ -50,12 +52,12 @@ def crypt(msg,shift):
 #Collect length of the string
         strLength = len(msg)
 #Place encrypted message in code variable
-        code = encrypt(msg)
+        code1 = encrypt(msg)
 
 #Write encrypted message to file
-        if len(code) > 0:
+        if len(code1) > 0:
            fe = open(filename, 'w')
-           fe.write(code)
+           fe.write(code1)
            fe.close()
 
 #Hide data in wav file	
@@ -74,14 +76,13 @@ def crypt(msg,shift):
         os.remove("Recovered.txt")
 
 #Place decrypted message in code variable
-        code = decrypt(msg)
+        code2 = decrypt(msg)
 #Write encrypted message to file
-        if len(code) > 0:
+        if len(code2) > 0:
            fe = open("DeCrypted.txt", 'w')
-           fe.write(code)
+           fe.write(code2)
            fe.close()
-                        
-print ("Done")
+           print ("Done")
 
 
 def displayText():
@@ -129,5 +130,6 @@ button.pack()
 
 crypt = Button(root, text = "Encrypt", command = crypt)
 crypt.pack()
+root.geometry("300x200")
 root.mainloop()
 
