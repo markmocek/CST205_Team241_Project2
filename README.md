@@ -1,4 +1,4 @@
- gHiding Text in Sound File
+ Hiding Text in Sound File
 
 Sean Vucinich - Abel Gonzalez - Mark Mocek
 
