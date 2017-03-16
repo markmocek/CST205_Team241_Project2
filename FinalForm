@@ -19,6 +19,7 @@ def openfile():
     f.read()
     print tkFileDialog.askopenfilename()
 
+#Function that shifts characters in 'message' based on a give number 'shift'
 def crypt(msg,shift):
         #Set string to lower case
         message = msg.lower()
