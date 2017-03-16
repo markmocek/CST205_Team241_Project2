@@ -56,44 +56,43 @@ def crypt(msg,shift):
                 else:
                      code = code + c
         return code
-    #Create StringLength variable for later use
+        #Create StringLength variable for later use
         strLength = 0
-#path = 'Test.txt'
 
 
-#Remove file
+        #Remove file
         os.remove(file)
 
 
-#Collect length of the string
+        #Collect length of the string
         strLength = len(msg)
-#Place encrypted message in code variable
+        #Place encrypted message in code variable
         code1 = encrypt(msg)
 
-#Write encrypted message to file
+        #Write encrypted message to file
         if len(code1) > 0:
            fe = open(filename, 'w')
            fe.write(code1)
            fe.close()
 
-#Hide data in wav file	
+        #Hide data in wav file	
         hide_data(filename, msg, "Hidden.wav", 1)
 
 
-#Recover data from wav file
+        #Recover data from wav file
         recover_data(filename, "Recovered.txt", 1, strLength)
 
-#Collect string to encrypt
+        #Collect string to encrypt
         f = open("Recovered.txt", 'r')
         msg = f.read()
         f.close()
 
-#Remove file
+        #Remove file
         os.remove("Recovered.txt")
 
-#Place decrypted message in code variable
+        #Place decrypted message in code variable
         code2 = decrypt(msg)
-#Write encrypted message to file
+        #Write encrypted message to file
         if len(code2) > 0:
            fe = open("DeCrypted.txt", 'w')
            fe.write(code2)
@@ -135,7 +134,7 @@ entryLabel = Label(textFrame)
 entryLabel["text"] = "Enter the text:"
 entryLabel.pack(side=LEFT)
 
-     # Create an Entry Widget in textFrame
+# Create an Entry Widget in textFrame
 entryWidget = Entry(textFrame)
 entryWidget["width"] = 50
 entryWidget.pack(side=LEFT)
