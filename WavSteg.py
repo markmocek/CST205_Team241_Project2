@@ -3,6 +3,7 @@ CST205 - Project 2 - Sean Vucinich, Abel , Mark Mocek - 3/16/17
 '''
 
 import getopt, math, os, struct, sys, wave
+import numpy as np
 
 def hide_data(sound_path, file_path, output_path, num_lsb):
     # Hide data from the file at file_path in the sound file at sound_path
