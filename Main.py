@@ -1,5 +1,5 @@
 '''
-CST205 - Project 2 - Sean Vucinich, Abel , Mark Mocek - 3/16/17
+CST205 - Project 2 - Sean Vucinich, Abel Gonzalez , Mark Mocek - 3/16/17
 
 Abel - Created the Graphic User Interface. Gathering text from user for the program to
 encrypt and hide in wav file.
