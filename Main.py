@@ -3,12 +3,10 @@ CST205 - Project 2 - Sean Vucinich, Abel , Mark Mocek - 3/16/17
 
 Abel - Created the Graphic User Interface. Gathering text from user for the program to
 encrypt and hide in wav file.
-
 Sean - Created the WavSteg file that hides data inside a wav file. The program takes
 text from a file and distributes bits across the wav file. The program also
 goes back through the wav file and recovers those hidden bits, converts them back to
 text, and places them in a text file.
-
 Mark - Created the character encryption function. The function takes the text file
 given and encrypts the text by shifting each character three positions in the alphabet.
 The function also takes the text file from the hiding recovery and decrypts it from the
@@ -19,8 +17,7 @@ import Tkinter
 from Tkinter import *
 import tkMessageBox
 import tkFileDialog
-from tkFileDialog import askopenfilename
-from tkFileDialog import asksaveasfile
+from tkFileDialog import askopenfilenamefrom tkFileDialog import asksaveasfile
 import Tkconstants
 from WavSteg import hide_data
 from WavSteg import recover_data
@@ -40,14 +37,14 @@ def helper(message, shift):
 			num = ord(c)
 			num += shift
 			# wrap list if necessary
-			if num > ord("z"):
+ 			if num > ord("z"):
 				num -= 26
 			elif num < ord("a"):
 				num += 26
 			code = code + chr(num)
 		#Only modify letters
 		else:
-			code = code + c
+#			code = code + c
 	return code
 
 #Encrypts the string and returns the result.
@@ -60,10 +57,18 @@ def decrypt(message):
 
 
 #---------------GUI------------------
-print tkFileDialog.askopenfilename()
+def openfile():
+    filename = askopenfilename()
+    file_opt = options = {}
+    options['filetypes'] = [('all files', '.*'), ('wav files', '.wav')]
+    f=open(filename)
+    f.read()
+    print tkFileDialog.askopenfilename()
+	
+message = filename
 
 def displayText():
-    """ Display the Entry text value. """
+     #Display the Entry text value. 
     global entryWidget
 
 
@@ -83,13 +88,13 @@ if __name__ == "__main__":
 root.title("Tkinter Entry Widget")
 root["padx"] = 40
 root["pady"] = 20   
-     
+     #CReate a text frame to hold the text label and the entry widget
 textFrame = Frame(root) 
-     
+     #Create a label in text frame
 entryLabel = Label(textFrame)
 entryLabel["text"] = "Enter the text:"
 entryLabel.pack(side=LEFT)
-  
+  #create an  entry textframe
 entryWidget = Entry(textFrame)
 entryWidget["width"] = 50
 entryWidget.pack(side=LEFT)
