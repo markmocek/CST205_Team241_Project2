@@ -65,7 +65,7 @@ def crypt(msg,shift):
 
 
 #Recover data from wav file
-        recover_data(filename, "Recovered.txt", 1, 4)
+        recover_data(filename, "Recovered.txt", 1, strLength)
 
 #Collect string to encrypt
         f = open("Recovered.txt", 'r')
