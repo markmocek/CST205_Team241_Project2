@@ -3,7 +3,7 @@ def helper(message, shift):
 	message = message.lower()
 	#Set string to hold characters
 	code = ""
-	
+
 	#Encrypt String
 	for c in message:
 		if c in "abcdefghijklmnopqrstuvwxyz":

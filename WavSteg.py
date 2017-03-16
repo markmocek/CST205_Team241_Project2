@@ -1,28 +1,29 @@
 import getopt, math, os, struct, sys, wave
+import numpy as np
 
 def hide_data(sound_path, file_path, output_path, num_lsb):
     # Hide data from the file at file_path in the sound file at sound_path
 
     sound = wave.open(sound_path, "r")
-    
+
     params = sound.getparams()
     channels = sound.getnchannels()
     sample_width = sound.getsampwidth()
     nframes = sound.getnframes()
     samples = nframes * channels
-    
+
     # We can hide up to num_lsb bits in each sample of the sound file
     max_size = (samples * num_lsb) // 8
     filesize = os.stat(file_path).st_size
-    
+
     if (filesize > max_size):
         required_LSBs = math.ceil(filesize * 8 / samples)
         raise ValueError("Input file too large to hide, "
                          "requires {} LSBs, using {}"
                          .format(required_LSBs, num_lsb))
-    
+
     print("Using {} B out of {} B".format(filesize, max_size))
-    
+
     if (sample_width == 1):  # samples are unsigned 8-bit integers
         fmt = "{}B".format(samples)
         # Used to set the least significant num_lsb bits of an integer to zero
@@ -39,23 +40,22 @@ def hide_data(sound_path, file_path, output_path, num_lsb):
     else:
         # Python's wave module doesn't support higher sample widths
         raise ValueError("File has an unsupported bit-depth")
-    
+
     # Put all the samples from the sound file into a list
     raw_data = list(struct.unpack(fmt, sound.readframes(nframes)))
     sound.close()
-    
     input_data = memoryview(open(file_path, "rb").read())
-    
+
     # The number of bits we've processed from the input file
     data_index = 0
     sound_index = 0
-    
+
     # values will hold the altered sound data
     values = []
     buffer = 0
     buffer_length = 0
     done = False
-    
+
     while(not done):
         while (buffer_length < num_lsb and data_index // 8 < len(input_data)):
             # If we don't have enough data in the buffer, add the
@@ -65,14 +65,14 @@ def hide_data(sound_path, file_path, output_path, num_lsb):
             bits_added = 8 - (data_index % 8)
             buffer_length += bits_added
             data_index += bits_added
-            
+
         # Retrieve the next num_lsb bits from the buffer for use later
         current_data = buffer % (1 << num_lsb)
         buffer >>= num_lsb
         buffer_length -= num_lsb
 
         while (sound_index < len(raw_data) and
-               raw_data[sound_index] == min_sample):
+              raw_data[sound_index] == min_sample):
             # If the next sample from the sound file is the smallest possible
             # value, we skip it. Changing the LSB of such a value could cause
             # an overflow and drastically change the sample in the output.
@@ -101,13 +101,13 @@ def hide_data(sound_path, file_path, output_path, num_lsb):
 
         if (data_index // 8 >= len(input_data) and buffer_length <= 0):
             done = True
-        
+
     while(sound_index < len(raw_data)):
         # At this point, there's no more data to hide. So we append the rest of
         # the samples from the original sound file.
         values.append(struct.pack(fmt[-1], raw_data[sound_index]))
         sound_index += 1
-    
+
     sound_steg = wave.open(output_path, "w")
     sound_steg.setparams(params)
     sound_steg.writeframes(b"".join(values))
@@ -115,14 +115,14 @@ def hide_data(sound_path, file_path, output_path, num_lsb):
 
 def recover_data(sound_path, output_path, num_lsb, bytes_to_recover):
     # Recover data from the file at sound_path to the file at output_path
-    
+
     sound = wave.open(sound_path, "r")
-    
+
     channels = sound.getnchannels()
     sample_width = sound.getsampwidth()
     nframes = sound.getnframes()
     samples = nframes * channels
-    
+
     if (sample_width == 1):  # samples are unsigned 8-bit integers
         fmt = "{}B".format(samples)
         # The least possible value for a sample in the sound file is actually
@@ -135,20 +135,20 @@ def recover_data(sound_path, output_path, num_lsb, bytes_to_recover):
     else:
         # Python's wave module doesn't support higher sample widths
         raise ValueError("File has an unsupported bit-depth")
-    
+
     # Put all the samples from the sound file into a list
     raw_data = list(struct.unpack(fmt, sound.readframes(nframes)))
     # Used to extract the least significant num_lsb bits of an integer
     mask = (1 << num_lsb) - 1
     output_file = open(output_path, "wb+")
-    
+
     data = bytearray()
-    sound_index = 0 
+    sound_index = 0
     buffer = 0
     buffer_length = 0
-    
+
     while (bytes_to_recover > 0):
-        
+
         next_sample = raw_data[sound_index]
         if (next_sample != min_sample):
             # Since we skipped samples with the minimum possible value when
@@ -156,7 +156,7 @@ def recover_data(sound_path, output_path, num_lsb, bytes_to_recover):
             buffer += (abs(next_sample) & mask) << buffer_length
             buffer_length += num_lsb
         sound_index += 1
-        
+
         while (buffer_length >= 8 and bytes_to_recover > 0):
             # If we have more than a byte in the buffer, add it to data
             # and decrement the number of bytes left to recover.
@@ -165,7 +165,7 @@ def recover_data(sound_path, output_path, num_lsb, bytes_to_recover):
             buffer_length -= 8
             data += struct.pack('1B', current_data)
             bytes_to_recover -= 1
-    
+
     output_file.write(bytes(data))
     output_file.close()
 
