@@ -1,3 +1,6 @@
+'''
+CST205 - Project 2 - Sean Vucinich, Abel , Mark Mocek - 3/16/17
+'''
 import getopt, math, os, struct, sys, wave
 import numpy as np
 
